@@ -19,16 +19,28 @@ import java.util.List;
 */
 public class PdfUtil {
 
-    public static void addBookmark2Pdf(String pdfFileName, String destPdfFileName, String bookmarkFileName) throws
-            IOException, DocumentException {
-        PdfReader reader = new PdfReader(pdfFileName);
-        PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(destPdfFileName));
-        HashMap<String, Object> bmap = BookmarkUtil.getBookmarksFromFile(new File(bookmarkFileName));
+    public static boolean addBookmark2Pdf(String pdfFileName, String destPdfFileName, String bookmarkFileName) {
 
-        List<HashMap<String, Object>> list =  BookmarkUtil.getBookmarks((ArrayList<HashMap<String, Object>>)bmap.get("contents"), Integer.parseInt(bmap.get("offset").toString()));
+        try {
+            PdfReader reader = new PdfReader(pdfFileName);
+            PdfStamper stamper = new PdfStamper(reader, new FileOutputStream(destPdfFileName));
+            HashMap<String, Object> bmap = BookmarkUtil.getBookmarksFromFile(new File(bookmarkFileName));
 
-        stamper.setOutlines(list);
-        stamper.close();
-        reader.close();
+            List<HashMap<String, Object>> list =  BookmarkUtil.getBookmarks((ArrayList<HashMap<String, Object>>)bmap.get("contents"), Integer.parseInt(bmap.get("offset").toString()));
+
+            stamper.setOutlines(list);
+            stamper.close();
+            reader.close();
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+
+        } catch (DocumentException e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 }
