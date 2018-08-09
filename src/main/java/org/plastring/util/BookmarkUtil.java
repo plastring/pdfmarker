@@ -21,8 +21,14 @@ public class BookmarkUtil {
         ArrayList<HashMap<String, Object>> bookmarks = new ArrayList<>();
 
         try(BufferedReader br = new BufferedReader(new FileReader(bookmarkFile))){
+
             String line = br.readLine();
-            bookmarkMap.put("offset", line.split("=")[1]);
+
+            if (line != null) {
+                bookmarkMap.put("offset", line.split("=")[1]);
+            } else {
+                bookmarkMap.put("offset", 0);
+            }
 
             while(true) {
                 HashMap<String, Object> map = new HashMap<>();
