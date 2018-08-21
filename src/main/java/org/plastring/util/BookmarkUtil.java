@@ -30,6 +30,8 @@ public class BookmarkUtil {
                 bookmarkMap.put("offset", 0);
             }
 
+            int lineNum = 2;
+
             while(true) {
                 HashMap<String, Object> map = new HashMap<>();
                 line = br.readLine();
@@ -37,11 +39,17 @@ public class BookmarkUtil {
                     break;
                 }
                 String key = line.split("@")[0];
-                String value = line.split("@")[1];
+                String value = null;
+                try {
+                    value = line.split("@")[1];
+                } catch (IndexOutOfBoundsException ex) {
+                    throw new Exception(String.format("目录格式有误，第 %d 行， 出错目录为：%s %n", lineNum, line), ex);
+                }
                 map.put("Title", key);
                 map.put("Page", value);
 
                 bookmarks.add(map);
+                lineNum++;
             }
 
             bookmarkMap.put("contents", bookmarks);
@@ -51,6 +59,8 @@ public class BookmarkUtil {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
         }
 
         return bookmarkMap;
